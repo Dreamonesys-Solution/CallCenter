@@ -106,7 +106,11 @@ namespace Dreamonesys.CallCenter.Main
                     dataGridViewClassStudent.Rows.Clear();
                     break;
                 case "dataGridViewCampusPoint":
-                    dataGridViewClassPoint.Rows.Clear();                    
+                    dataGridViewClassPoint.Rows.Clear();
+                    dataGridViewStudentPoint.Rows.Clear();
+                    break;
+                case "dataGridViewClassPoint":
+                    dataGridViewStudentPoint.Rows.Clear();
                     break;
 
                 default:
@@ -140,9 +144,12 @@ namespace Dreamonesys.CallCenter.Main
                         // 컬럼 루프
                         for (int colCount = 0; colCount <= pDataGridView.Columns.Count - 1; colCount++)
                         {
-                            pDataGridView[colCount, pDataGridView.Rows.Count - 1].Value =
-                                //dataGridViewCampus.Rows[dataGridViewCampus.Rows.Count - 1].Cells[colCount].Value = 
-                                row[pDataGridView.Columns[colCount].DataPropertyName].ToString();
+                            if (pDataGridView.Columns[colCount].DataPropertyName != "check_yn")
+                            {
+                                pDataGridView[colCount, pDataGridView.Rows.Count - 1].Value =
+                                    //dataGridViewCampus.Rows[dataGridViewCampus.Rows.Count - 1].Cells[colCount].Value = 
+                                    row[pDataGridView.Columns[colCount].DataPropertyName].ToString();                                
+                            }
                         }
 
                     }
@@ -339,6 +346,47 @@ namespace Dreamonesys.CallCenter.Main
                     break;
 
                 case "select_student_point":
+                    //해당 반의 학생 콩알 목록 조회
+                    pSqlCommand.CommandText = @"
+                       SELECT D.cpnm
+                            , B.clnm
+	                        , C.usernm
+                            , C.point
+                            , A.cpno                            
+                            , A.userid
+	                     FROM tls_class_user AS A 
+                    LEFT JOIN tls_class AS B 
+                           ON A.clno = B.clno
+                    LEFT JOIN tls_member AS C
+                           ON A.userid = C.userid
+                    LEFT JOIN tls_campus AS D
+                           ON A.cpno = D.cpno
+                        WHERE A.cpno = '" + GetCellValue(dataGridViewCampusPoint, dataGridViewCampusPoint.CurrentCell.RowIndex, "cpno") + @"'
+                          AND A.clno = '" + GetCellValue(dataGridViewClassPoint, dataGridViewClassPoint.CurrentCell.RowIndex, "clno") + @"'
+                          AND A.auth_cd = 'S'
+                          AND (A.end_date = '' OR A.end_date IS NULL OR A.end_date >= CONVERT(VARCHAR(8), GETDATE(), 112) ) ";
+
+                     if (!string.IsNullOrEmpty(businessCDPoint))
+                    {
+                        pSqlCommand.CommandText += @"
+                         AND D.business_cd = '" + businessCDPoint + "' ";
+                    }
+                    if (!string.IsNullOrEmpty(cpnoPoint))
+                    {
+                        pSqlCommand.CommandText += @"
+                         AND A.cpno = '" + cpnoPoint + "' ";
+                    }
+                    if (!string.IsNullOrEmpty(schoolCDPoint))
+                    {
+                        pSqlCommand.CommandText += @"
+                         AND B.school_cd = '" + schoolCDPoint + "' ";
+                    }       
+                    pSqlCommand.CommandText += @"                        
+                        ORDER BY D.cpnm, B.clnm, C.usernm ";
+                   
+                    
+                    break;
+                case "select_student_point_all":
                     //학생 콩알 목록 조회
                     pSqlCommand.CommandText = @"
                        SELECT D.cpnm
@@ -354,10 +402,10 @@ namespace Dreamonesys.CallCenter.Main
                            ON A.userid = C.userid
                     LEFT JOIN tls_campus AS D
                            ON A.cpno = D.cpno
-                        WHERE B.clno = " + GetCellValue(dataGridViewClassPoint, dataGridViewClassPoint.CurrentCell.RowIndex, "clno") + @"
-                          AND A.auth_cd = 'S'
+                        WHERE A.auth_cd = 'S'
                           AND (A.end_date = '' OR A.end_date IS NULL OR A.end_date >= CONVERT(VARCHAR(8), GETDATE(), 112) ) ";
-                     if (!string.IsNullOrEmpty(businessCDPoint))
+
+                    if (!string.IsNullOrEmpty(businessCDPoint))
                     {
                         pSqlCommand.CommandText += @"
                          AND D.business_cd = '" + businessCDPoint + "' ";
@@ -371,21 +419,19 @@ namespace Dreamonesys.CallCenter.Main
                     {
                         pSqlCommand.CommandText += @"
                          AND B.school_cd = '" + schoolCDPoint + "' ";
-                    }
-                    if (!string.IsNullOrEmpty(dataGridViewCampusPoint.CurrentCell.RowIndex.ToString()))
-                    {
-                        pSqlCommand.CommandText += @"
-                         AND D.cpno = '" + GetCellValue(dataGridViewCampusPoint, dataGridViewCampusPoint.CurrentCell.RowIndex, "cpno") + @" ";
-                    }
+                    }                    
+                    
                     if (!string.IsNullOrEmpty(textBoxStudentNMPoint.Text))
                     {
                         pSqlCommand.CommandText += @"
                         AND C.usernm like '%" + textBoxStudentNMPoint.Text + "%' ";
                     }
+
+
                     pSqlCommand.CommandText += @"                        
                         ORDER BY D.cpnm, B.clnm, C.usernm ";
                     textBoxStudentNMPoint.Text = "";
-                    
+
                     break;
                 default:
                     break;
@@ -668,6 +714,15 @@ namespace Dreamonesys.CallCenter.Main
             if (dataGridViewClassPoint.Rows.Count > 0 && dataGridViewClassPoint.CurrentCell != null)
             {
                 SelectDataGridView(dataGridViewStudentPoint, "select_student_point");
+            }
+        }
+
+        private void textBoxStudentNMPoint_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                //학생콩알정보 조회
+                SelectDataGridView(dataGridViewStudentPoint, "select_student_point_all");
             }
         }
 
