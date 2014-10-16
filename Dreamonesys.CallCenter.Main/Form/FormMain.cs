@@ -206,9 +206,7 @@ namespace Dreamonesys.CallCenter.Main
             string yyyyStudy = comboBoxYyyyStudy.SelectedValue.ToString();
             string schoolCDStudy = comboBoxSchoolCDStudy.SelectedValue.ToString();
             string termCDStudy = comboBoxTermCDStudy.SelectedValue.ToString();
-            string useYNStudy = comboBoxUseYNStudy.SelectedValue.ToString();
-            
-                
+            string useYNStudy = comboBoxUseYNStudy.SelectedValue.ToString();                           
 
             switch (pQueryKind)
             {
