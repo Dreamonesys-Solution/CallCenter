@@ -239,8 +239,8 @@ namespace Dreamonesys.CallCenter.Main
 			                , (SELECT name FROM tls_web_code WHERE cdmain = 'grade' AND cdsub = TC.grade_cd) AS GRADE_NM
 			                , (SELECT COUNT(userid)FROM tls_class_user WHERE clno = TC.clno AND cpno = TC.cpno AND auth_cd = 's'
 				                  AND (end_date = '' OR end_date IS NULL OR CONVERT(CHAR,GETDATE(),112) BETWEEN start_date AND end_date)) AS USER_CNT
-		                FROM " + GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "db_link") + @".DBO.V_u2m_student_class AS USC
-                   LEFT JOIN tls_class as TC
+		                FROM " + GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "db_link") + @".DBO.V_u2m_student_class AS USC WITH(nolock)
+                   LEFT JOIN tls_class as TC 
 	    	              ON USC.class_id = TC.class_id
     	               WHERE USC.student_id = '" + GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "member_id") + @"'
 		                 AND TC.cpno = " + GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "cpno") + @"
@@ -397,7 +397,31 @@ namespace Dreamonesys.CallCenter.Main
                 textBoxUserid.Text = GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "userid");
                 textBoxLoginID.Text = GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "login_id");
                 textBoxLoginPW.Text = GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "login_pwd");                
+<<<<<<< HEAD
             }            
+=======
+            }
+                        
+        }
+
+        private void dataGridViewStudent_MouseClick(object sender, MouseEventArgs e)
+        {
+            //학생 u2m학습창 및 마이페이지 로그인
+            if (e.Button == MouseButtons.Right)
+            {
+                int currentMouseOverRow = ((DataGridView)sender).HitTest(e.X, e.Y).RowIndex;
+                if (currentMouseOverRow >= 0)
+                {
+                    ((DataGridView)sender).CurrentCell = ((DataGridView)sender)[0, currentMouseOverRow];
+                    this._common.RunLogin(((DataGridView)sender), new Point(e.X, e.Y));
+                }
+            }
+
+
+
+
+
+>>>>>>> 601a29752154d0b7db5ca3f4ab9673dfe17fcee6
         }
 
         private void dataGridViewStudent_MouseClick(object sender, MouseEventArgs e)

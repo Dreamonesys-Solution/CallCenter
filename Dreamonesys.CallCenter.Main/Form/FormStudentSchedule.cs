@@ -370,7 +370,8 @@ namespace Dreamonesys.CallCenter.Main
         }
 
         private void dataGridViewStudentStudy_Click(object sender, EventArgs e)
-        {   //학생 차시 리스트 조회
+        {
+            //학생 차시 리스트 조회
             SelectDataGridView(dataGridViewStudentSchedule, "select_student_schedule");
         }
 
@@ -403,8 +404,14 @@ namespace Dreamonesys.CallCenter.Main
         {   //날짜별 차시 조회
             SelectDataGridView(dataGridViewStudentStudy, "select_student_study_all");
         }
+
         
+
         #endregion Method
+
+        
+
+        
 
 
 

@@ -83,6 +83,10 @@
             this.Column36 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.label4 = new System.Windows.Forms.Label();
+            this.comboBoxCampusType = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.comboBoxCampus = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPageClassSchedule.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -126,6 +130,10 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.comboBoxCampus);
+            this.splitContainer1.Panel1.Controls.Add(this.label5);
+            this.splitContainer1.Panel1.Controls.Add(this.comboBoxCampusType);
+            this.splitContainer1.Panel1.Controls.Add(this.label4);
             this.splitContainer1.Panel1.Controls.Add(this.label3);
             this.splitContainer1.Panel1.Controls.Add(this.textBoxStudyNM);
             this.splitContainer1.Panel1.Controls.Add(this.textBoxClassNM);
@@ -140,13 +148,13 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer1.Size = new System.Drawing.Size(1320, 780);
-            this.splitContainer1.SplitterDistance = 206;
+            this.splitContainer1.SplitterDistance = 217;
             this.splitContainer1.TabIndex = 0;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(448, 5);
+            this.label3.Location = new System.Drawing.Point(835, 4);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(49, 12);
             this.label3.TabIndex = 8;
@@ -154,7 +162,7 @@
             // 
             // textBoxStudyNM
             // 
-            this.textBoxStudyNM.Location = new System.Drawing.Point(208, 2);
+            this.textBoxStudyNM.Location = new System.Drawing.Point(557, 1);
             this.textBoxStudyNM.Name = "textBoxStudyNM";
             this.textBoxStudyNM.Size = new System.Drawing.Size(100, 21);
             this.textBoxStudyNM.TabIndex = 7;
@@ -162,7 +170,7 @@
             // 
             // textBoxClassNM
             // 
-            this.textBoxClassNM.Location = new System.Drawing.Point(48, 2);
+            this.textBoxClassNM.Location = new System.Drawing.Point(397, 1);
             this.textBoxClassNM.Name = "textBoxClassNM";
             this.textBoxClassNM.Size = new System.Drawing.Size(99, 21);
             this.textBoxClassNM.TabIndex = 6;
@@ -171,7 +179,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(153, 6);
+            this.label2.Location = new System.Drawing.Point(502, 5);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(49, 12);
             this.label2.TabIndex = 5;
@@ -180,7 +188,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(5, 5);
+            this.label1.Location = new System.Drawing.Point(354, 4);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(37, 12);
             this.label1.TabIndex = 4;
@@ -188,7 +196,7 @@
             // 
             // buttonClassStudy
             // 
-            this.buttonClassStudy.Location = new System.Drawing.Point(709, 1);
+            this.buttonClassStudy.Location = new System.Drawing.Point(1096, 0);
             this.buttonClassStudy.Name = "buttonClassStudy";
             this.buttonClassStudy.Size = new System.Drawing.Size(49, 23);
             this.buttonClassStudy.TabIndex = 3;
@@ -202,7 +210,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 25);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1320, 181);
+            this.groupBox1.Size = new System.Drawing.Size(1320, 192);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "과정1";
@@ -247,8 +255,8 @@
             this.dataGridViewClassStudy.Name = "dataGridViewClassStudy";
             this.dataGridViewClassStudy.RowTemplate.Height = 23;
             this.dataGridViewClassStudy.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewClassStudy.Size = new System.Drawing.Size(1314, 161);
-            this.dataGridViewClassStudy.TabIndex = 0;
+            this.dataGridViewClassStudy.Size = new System.Drawing.Size(1314, 172);
+            this.dataGridViewClassStudy.TabIndex = 2;
             this.dataGridViewClassStudy.Click += new System.EventHandler(this.dataGridViewClassStudy_Click);
             // 
             // Column1
@@ -448,7 +456,7 @@
             // dateTimePickerClassStudy
             // 
             this.dateTimePickerClassStudy.CustomFormat = "";
-            this.dateTimePickerClassStudy.Location = new System.Drawing.Point(503, 2);
+            this.dateTimePickerClassStudy.Location = new System.Drawing.Point(890, 1);
             this.dateTimePickerClassStudy.Name = "dateTimePickerClassStudy";
             this.dateTimePickerClassStudy.Size = new System.Drawing.Size(200, 21);
             this.dateTimePickerClassStudy.TabIndex = 1;
@@ -467,7 +475,7 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1320, 570);
+            this.groupBox2.Size = new System.Drawing.Size(1320, 559);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "반 차시 리스트";
@@ -494,7 +502,7 @@
             this.dataGridViewClassSchedule.Name = "dataGridViewClassSchedule";
             this.dataGridViewClassSchedule.RowTemplate.Height = 23;
             this.dataGridViewClassSchedule.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewClassSchedule.Size = new System.Drawing.Size(1314, 550);
+            this.dataGridViewClassSchedule.Size = new System.Drawing.Size(1314, 539);
             this.dataGridViewClassSchedule.TabIndex = 0;
             // 
             // Column27
@@ -569,10 +577,44 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1285, 657);
+            this.tabPage2.Size = new System.Drawing.Size(1326, 786);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.Text = "학생 차시 목록";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(15, 5);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(37, 12);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "구분 :";
+            // 
+            // comboBoxCampusType
+            // 
+            this.comboBoxCampusType.FormattingEnabled = true;
+            this.comboBoxCampusType.Location = new System.Drawing.Point(57, 2);
+            this.comboBoxCampusType.Name = "comboBoxCampusType";
+            this.comboBoxCampusType.Size = new System.Drawing.Size(54, 20);
+            this.comboBoxCampusType.TabIndex = 10;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(120, 7);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(49, 12);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "캠퍼스 :";
+            // 
+            // comboBoxCampus
+            // 
+            this.comboBoxCampus.FormattingEnabled = true;
+            this.comboBoxCampus.Location = new System.Drawing.Point(175, 2);
+            this.comboBoxCampus.Name = "comboBoxCampus";
+            this.comboBoxCampus.Size = new System.Drawing.Size(126, 20);
+            this.comboBoxCampus.TabIndex = 12;
             // 
             // FormClassSchedule
             // 
@@ -606,7 +648,6 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button buttonClassStudy;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.DataGridView dataGridViewClassStudy;
         private System.Windows.Forms.DateTimePicker dateTimePickerClassStudy;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -628,6 +669,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column34;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column35;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column36;
+        private System.Windows.Forms.DataGridView dataGridViewClassStudy;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column25;
@@ -656,5 +698,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column26;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column37;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column38;
+        private System.Windows.Forms.ComboBox comboBoxCampusType;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox comboBoxCampus;
+        private System.Windows.Forms.Label label5;
     }
 }

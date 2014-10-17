@@ -41,6 +41,7 @@ namespace Dreamonesys.CallCenter.Main
             get { return sClassEmployeeCLNO; }
             set { sClassEmployeeCLNO = value; }
         }
+
         #endregion
 
         public FormClassSchedule()
@@ -60,6 +61,29 @@ namespace Dreamonesys.CallCenter.Main
 
         #region Method
 
+        /// <summary>
+        /// 콤보박스 리스트를 조회한다.
+        /// </summary>
+        /// <history>
+        /// 박석제, 2014-09-24, 생성
+        /// </history>
+        public void InitCombo()
+        {
+            // 캠퍼스 구분 콤보박스 데이터 생성
+            //_common.GetComboList(comboBoxCampusType, "캠퍼스구분", true);
+            // 캠퍼스 콤보박스 데이터 생성
+            //_common.GetComboList(comboBoxCampus, "캠퍼스", true);
+
+            // 콤보박스 멀티
+            Common.ComboBoxList[] comboBoxList = 
+            {
+                //main tab 콤보박스
+                new Common.ComboBoxList(comboBoxCampusType, "캠퍼스구분", true),
+                new Common.ComboBoxList(comboBoxCampus, "캠퍼스", true),            
+                                
+            };
+            this._common.GetComboList(comboBoxList);
+        }
         /// <summary>
         /// 사용자 정의 목록을 조회한다.
         /// </summary>
@@ -140,6 +164,8 @@ namespace Dreamonesys.CallCenter.Main
         private SqlCommand CreateSql(ref SqlCommand pSqlCommand, string pQueryKind, string[] pParameter = null)
         {
             pSqlCommand = new SqlCommand();
+            string businessCD = comboBoxCampusType.SelectedValue.ToString();
+            string cpno = comboBoxCampus.SelectedValue.ToString();
 
             switch (pQueryKind)
             {
@@ -199,7 +225,7 @@ namespace Dreamonesys.CallCenter.Main
 			                 , STUFF(STUFF(CS.sdate, 5, 0, '-'), 8, 0, '-') AS SDATE
 			                 , STUFF(STUFF(CS.edate, 5, 0, '-'), 8, 0, '-') AS EDATE
 			                 , DBO.F_U_WEEK_HAN(CS.week_day) AS WEEK_DAY
-			                 , (TS.sdnm + view_sdnm) AS SDNM
+			                 , (TS.sdnm + '-' + view_sdnm) AS SDNM
                              , CS.sdno
 			                 , CS.j_use_yn
 			                 , CS.j_count
@@ -226,7 +252,7 @@ namespace Dreamonesys.CallCenter.Main
 	                 LEFT JOIN tls_study AS TS
 	                        ON CS.sdno = TS.sdno
 		                 WHERE CS.cpno = " + ClassEmployeeCPNO + @"
-                    ";
+                    ";                    
                     if (!string.IsNullOrEmpty(textBoxClassNM.Text))
                     {
                         pSqlCommand.CommandText += @"
@@ -345,6 +371,7 @@ namespace Dreamonesys.CallCenter.Main
         /// </history>
         private void FormClassSchedule_Load(object sender, EventArgs e)
         {
+            InitCombo();
             //반 차시 조회
             SelectDataGridView(dataGridViewClassStudy, "select_class_study");
         }
@@ -374,11 +401,20 @@ namespace Dreamonesys.CallCenter.Main
         {
             SelectDataGridView(dataGridViewClassSchedule, "select_class_schedule");
         }
+        
 
 
         #endregion Method
 
         
+
+
+
+
+
+
+
+
 
 
 
