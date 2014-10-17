@@ -281,6 +281,7 @@
             this.dataGridViewStudent.Size = new System.Drawing.Size(1174, 298);
             this.dataGridViewStudent.TabIndex = 0;
             this.dataGridViewStudent.Click += new System.EventHandler(this.dataGridViewStudent_Click);
+            this.dataGridViewStudent.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridViewStudent_MouseClick);
             // 
             // cpnm
             // 
