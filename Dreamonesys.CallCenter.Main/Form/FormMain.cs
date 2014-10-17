@@ -1223,22 +1223,7 @@ namespace Dreamonesys.CallCenter.Main
                 }
             }
         }
-
-<<<<<<< HEAD
-        private void dataGridViewClassStudent_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                int currentMouseOverRow = ((DataGridView)sender).HitTest(e.X, e.Y).RowIndex;
-                if (currentMouseOverRow >= 0)
-                {
-                    ((DataGridView)sender).CurrentCell = ((DataGridView)sender)[0, currentMouseOverRow];
-                    this._common.RunLogin(((DataGridView)sender), new Point(e.X, e.Y));
-                }
-            }
-        }
      
-=======
         private void dataGridViewStudent_DoubleClick(object sender, EventArgs e)
         {
             //차시관리 학생 차시 조회
@@ -1253,17 +1238,6 @@ namespace Dreamonesys.CallCenter.Main
                 }
             }
         }
-
-        
-
-        
-
-        
-
-        
-
-
->>>>>>> 601a29752154d0b7db5ca3f4ab9673dfe17fcee6
 
     }
 }

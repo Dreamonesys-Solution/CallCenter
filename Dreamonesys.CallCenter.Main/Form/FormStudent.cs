@@ -396,10 +396,7 @@ namespace Dreamonesys.CallCenter.Main
                 // userid, login_id, login_pw 텍스트박에서 표시한다.  
                 textBoxUserid.Text = GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "userid");
                 textBoxLoginID.Text = GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "login_id");
-                textBoxLoginPW.Text = GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "login_pwd");                
-<<<<<<< HEAD
-            }            
-=======
+                textBoxLoginPW.Text = GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "login_pwd");                        
             }
                         
         }
@@ -416,30 +413,9 @@ namespace Dreamonesys.CallCenter.Main
                     this._common.RunLogin(((DataGridView)sender), new Point(e.X, e.Y));
                 }
             }
-
-
-
-
-
->>>>>>> 601a29752154d0b7db5ca3f4ab9673dfe17fcee6
-        }
-
-        private void dataGridViewStudent_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                int currentMouseOverRow = ((DataGridView)sender).HitTest(e.X, e.Y).RowIndex;
-                if (currentMouseOverRow >= 0)
-                {
-                    ((DataGridView)sender).CurrentCell = ((DataGridView)sender)[0, currentMouseOverRow];
-                    this._common.RunLogin(((DataGridView)sender), new Point(e.X, e.Y));
-                }
-            }
         }
        
         #region Event
-
-        
 
         #endregion Event
 
