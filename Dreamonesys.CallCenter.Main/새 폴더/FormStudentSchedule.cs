@@ -25,8 +25,10 @@ namespace Dreamonesys.CallCenter.Main
 {
     public partial class FormStudentSchedule : Form
     {
-       private Common _common;
+        private Common _common;
         private AppMain _appMain;
+
+        public string StudyType { get; set; }
 
         #region Property
         private string sClassStudentCPNO;        
@@ -366,7 +368,19 @@ namespace Dreamonesys.CallCenter.Main
         private void FormStudentSchedule_Load(object sender, EventArgs e)
         {
             //반 차시 조회
-            SelectDataGridView(dataGridViewStudentStudy, "select_student_study");
+            switch (StudyType)
+            {
+                case "C": //반 차시 조회
+                    tabControl1.SelectedTab = tabPageStudentSchedule;
+                    SelectDataGridView(dataGridViewStudentStudy, "select_class_study");
+                    break;
+                case "S": //학생 차시 조회
+                    tabControl1.SelectedTab = tabPage2;
+                    SelectDataGridView(dataGridViewStudentStudy, "select_student_study");
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void dataGridViewStudentStudy_Click(object sender, EventArgs e)

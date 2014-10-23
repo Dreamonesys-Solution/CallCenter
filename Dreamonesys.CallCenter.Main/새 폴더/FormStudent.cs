@@ -354,7 +354,7 @@ namespace Dreamonesys.CallCenter.Main
         private void comboBoxCampusType_SelectedIndexChanged(object sender, EventArgs e)
         {
              //캠퍼스 콤보박스 데이터 생성
-            string campusType = comboBoxCampusType.SelectedValue.ToString();
+            string campusType = comboBoxCampusType.SelectedValue.ToString().Trim();
 
             _common.GetComboList(comboBoxCampus, "캠퍼스", true, new string[] { campusType });
             //SelectDataGridView(dataGridViewStudent, "select_Student");
@@ -396,7 +396,7 @@ namespace Dreamonesys.CallCenter.Main
                 // userid, login_id, login_pw 텍스트박에서 표시한다.  
                 textBoxUserid.Text = GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "userid");
                 textBoxLoginID.Text = GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "login_id");
-                textBoxLoginPW.Text = GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "login_pwd");                        
+                textBoxLoginPW.Text = GetCellValue(dataGridViewStudent, dataGridViewStudent.CurrentCell.RowIndex, "login_pwd");                
             }
                         
         }
@@ -413,12 +413,24 @@ namespace Dreamonesys.CallCenter.Main
                     this._common.RunLogin(((DataGridView)sender), new Point(e.X, e.Y));
                 }
             }
+
+
+
+
+
         }
+
        
         #region Event
 
+        
+
         #endregion Event
 
+        
 
+       
+
+      
     }
 }

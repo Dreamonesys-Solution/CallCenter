@@ -8,7 +8,6 @@
 //using System.Threading.Tasks;
 //using System.Windows.Forms;
 
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,30 +22,29 @@ using Dreamonesys.CallCenter.Main.Class;
 
 namespace Dreamonesys.CallCenter.Main
 {
-    public partial class FormStudentSchedule : Form
+    public partial class FormClassSchedule : Form
     {
-       private Common _common;
+        private Common _common;
         private AppMain _appMain;
 
         #region Property
-        private string sClassStudentCPNO;        
-        private string sClassStudentUID;
+        private string sClassEmployeeCPNO;
+        private string sClassEmployeeCLNO;
 
-        public string ClassStudentCPNO
+        public string ClassEmployeeCPNO
         {
-            get { return sClassStudentCPNO; }
-            set { sClassStudentCPNO = value; }
+            get { return sClassEmployeeCPNO; }
+            set { sClassEmployeeCPNO = value; }
         }
-        
-        public string ClassStudentUID
+        public string ClassEmployeeCLNO
         {
-            get { return sClassStudentUID; }
-            set { sClassStudentUID = value; }
+            get { return sClassEmployeeCLNO; }
+            set { sClassEmployeeCLNO = value; }
         }
-       
+
         #endregion
 
-        public FormStudentSchedule()
+        public FormClassSchedule()
         {
             InitializeComponent();
 
@@ -64,6 +62,29 @@ namespace Dreamonesys.CallCenter.Main
         #region Method
 
         /// <summary>
+        /// 콤보박스 리스트를 조회한다.
+        /// </summary>
+        /// <history>
+        /// 박석제, 2014-09-24, 생성
+        /// </history>
+        public void InitCombo()
+        {
+            // 캠퍼스 구분 콤보박스 데이터 생성
+            //_common.GetComboList(comboBoxCampusType, "캠퍼스구분", true);
+            // 캠퍼스 콤보박스 데이터 생성
+            //_common.GetComboList(comboBoxCampus, "캠퍼스", true);
+
+            // 콤보박스 멀티
+            Common.ComboBoxList[] comboBoxList = 
+            {
+                //main tab 콤보박스
+                new Common.ComboBoxList(comboBoxCampusType, "캠퍼스구분", true),
+                new Common.ComboBoxList(comboBoxCampus, "캠퍼스", true),            
+                                
+            };
+            this._common.GetComboList(comboBoxList);
+        }
+        /// <summary>
         /// 사용자 정의 목록을 조회한다.
         /// </summary>
         /// <history>
@@ -77,10 +98,10 @@ namespace Dreamonesys.CallCenter.Main
             // 그리드 초기화
             switch (pDataGridView.Name)
             {
-                case "dataGridViewStudentStudy":
-                    dataGridViewStudentSchedule.Rows.Clear();
+                case "dataGridViewClassStudy":
+                    dataGridViewClassSchedule.Rows.Clear();                    
                     break;
-
+                
                 default:
                     break;
             }
@@ -143,128 +164,114 @@ namespace Dreamonesys.CallCenter.Main
         private SqlCommand CreateSql(ref SqlCommand pSqlCommand, string pQueryKind, string[] pParameter = null)
         {
             pSqlCommand = new SqlCommand();
+            string businessCD = comboBoxCampusType.SelectedValue.ToString();
+            string cpno = comboBoxCampus.SelectedValue.ToString();
 
             switch (pQueryKind)
             {
  
-                case "select_student_study":
+                case "select_class_study":
 
-                    //학생 차시 정보 조회(과정2)
+                    //반 차시 정보 조회(과정1) 
                     pSqlCommand.CommandText = @"                       
-		                SELECT (SELECT usernm FROM tls_member WHERE userid = MS.tid) AS TID
-	    	                 , (SELECT cpnm FROM tls_campus WHERE cpno = MS.cpno) AS CPNM
-                             , MS.term_cd
-		                     , TC.clnm
-                             , (SELECT usernm FROM tls_member where userid = ms.userid) AS USERNM
-			                 , STUFF(STUFF(MS.sdate, 5, 0, '-'), 8, 0, '-') AS SDATE 
-	                         , STUFF(STUFF(MS.edate, 5, 0, '-'), 8, 0, '-') AS EDATE
-	 		                 , DBO.F_U_WEEK_HAN(MS.week_day) AS WEEK_DAY
+		                SELECT (SELECT usernm FROM tls_member WHERE userid = CS.tid) AS TID
+		                     , (SELECT cpnm FROM tls_campus WHERE cpno = CS.cpno) AS CPNM
+                             , CS.term_cd
+			                 , TC.clnm
+			                 , STUFF(STUFF(CS.sdate, 5, 0, '-'), 8, 0, '-') AS SDATE
+			                 , STUFF(STUFF(CS.edate, 5, 0, '-'), 8, 0, '-') AS EDATE
+			                 , DBO.F_U_WEEK_HAN(CS.week_day) AS WEEK_DAY
 			                 , (TS.sdnm + view_sdnm) AS SDNM
-                             , MS.sdno
-			                 , MS.use_yn
-			                 , MS.j_use_yn
-			                 , MS.j_count
-			                 , MS.j_hitpoint
-			                 , MS.j_quiz_cnt
-			                 , MS.correct_yn
-			                 , MS.m_use_yn
-			                 , MS.m_count			 
-			                 , MS.m_hitpoint
-			                 , MS.m_quiz_cnt
-			                 , MS.m_quiz_type
-			                 , MS.l_quiz_cnt
-			                 , MS.concept_yn
-			                 , MS.quiz_yn
-			                 , MS.menu_yn
-			                 , (SELECT usernm FROM tls_member WHERE userid = MS.rid) AS RID
-			                 , MS.RDATETIME
-			                 , (SELECT usernm FROM tls_member WHERE userid = MS.uid) AS UID
-			                 , MS.UDATETIME
-                             , MS.yyyy
-                             , MS.cpno
-                             , MS.userid
-	                     FROM tls_member_study AS MS
-                    LEFT JOIN tls_class AS TC
-	                       ON MS.cpno = TC.cpno and MS.clno = TC.clno
-	                LEFT JOIN tls_study AS TS
-	                       ON MS.sdno = TS.sdno
-		                WHERE MS.cpno = " + ClassStudentCPNO + @"
-                          AND MS.userid = " + ClassStudentUID + @"
-		                  AND CONVERT(CHAR, GETDATE(), 112) BETWEEN MS.sdate AND MS.edate
-                        ORDER BY MS.sdate
-		            ";
+                             , CS.sdno
+			                 , CS.j_use_yn
+			                 , CS.j_count
+			                 , CS.j_hitpoint
+			                 , CS.j_quiz_cnt
+			                 , CS.correct_yn
+			                 , CS.c_use_yn
+			                 , CS.c_common_cnt
+			                 , CS.c_each_cnt
+			                 , CS.l_quiz_cnt
+			                 , CS.concept_yn
+			                 , CS.quiz_yn
+			                 , CS.menu_yn
+			                 , (SELECT usernm FROM tls_member WHERE userid = CS.rid) AS RID
+			                 , CS.RDATETIME
+			                 , (SELECT usernm FROM tls_member WHERE userid = CS.uid) AS UID
+			                 , CS.UDATETIME
+                             , CS.yyyy
+                             , CS.cpno
+                             , CS.clno
+		                  FROM tls_class_study AS CS
+                     LEFT JOIN tls_class AS TC
+	                        ON CS.cpno = TC.cpno and CS.clno = TC.clno
+	                 LEFT JOIN tls_study AS TS
+	                        ON CS.sdno = TS.sdno
+		                 WHERE CS.cpno = " + ClassEmployeeCPNO + @"                    
+                           AND CS.clno = " + ClassEmployeeCLNO + @"
+                           AND CONVERT(CHAR,GETDATE(), 112) BETWEEN CS.sdate AND CS.edate		            
+                        ORDER BY TC.clnm, CS.sdate
+                    ";
                     break;
 
-                case "select_student_study_all":
+               case "select_class_study_all":
 
-                    //반별 학생, 학습명 차시 정보 조회(과정2)
+                    //반별, 학습별 차시 정보 조회(과정1) 
                     pSqlCommand.CommandText = @"                       
-		                SELECT (SELECT usernm FROM tls_member WHERE userid = MS.tid) AS TID
-	    	                 , (SELECT cpnm FROM tls_campus WHERE cpno = MS.cpno) AS CPNM
-                             , MS.term_cd
-		                     , TC.clnm
-                             , TM.usernm
-			                 , STUFF(STUFF(MS.sdate, 5, 0, '-'), 8, 0, '-') AS SDATE 
-	                         , STUFF(STUFF(MS.edate, 5, 0, '-'), 8, 0, '-') AS EDATE
-	 		                 , DBO.F_U_WEEK_HAN(MS.week_day) AS WEEK_DAY
+		                SELECT (SELECT usernm FROM tls_member WHERE userid = CS.tid) AS TID
+		                     , (SELECT cpnm FROM tls_campus WHERE cpno = CS.cpno) AS CPNM
+                             , CS.term_cd
+			                 , TC.clnm
+			                 , STUFF(STUFF(CS.sdate, 5, 0, '-'), 8, 0, '-') AS SDATE
+			                 , STUFF(STUFF(CS.edate, 5, 0, '-'), 8, 0, '-') AS EDATE
+			                 , DBO.F_U_WEEK_HAN(CS.week_day) AS WEEK_DAY
 			                 , (TS.sdnm + '-' + view_sdnm) AS SDNM
-                             , MS.sdno
-			                 , MS.use_yn
-			                 , MS.j_use_yn
-			                 , MS.j_count
-			                 , MS.j_hitpoint
-			                 , MS.j_quiz_cnt
-			                 , MS.correct_yn
-			                 , MS.m_use_yn
-			                 , MS.m_count			 
-			                 , MS.m_hitpoint
-			                 , MS.m_quiz_cnt
-			                 , MS.m_quiz_type
-			                 , MS.l_quiz_cnt
-			                 , MS.concept_yn
-			                 , MS.quiz_yn
-			                 , MS.menu_yn
-			                 , (SELECT usernm FROM tls_member WHERE userid = MS.rid) AS RID
-			                 , MS.RDATETIME
-			                 , (SELECT usernm FROM tls_member WHERE userid = MS.uid) AS UID
-			                 , MS.UDATETIME
-                             , MS.yyyy
-                             , MS.cpno
-                             , MS.userid
-	                     FROM tls_member_study AS MS
-                    LEFT JOIN tls_member AS TM
-                           ON MS.userid = TM.userid
-                    LEFT JOIN tls_class AS TC
-	                       ON MS.cpno = TC.cpno and MS.clno = TC.clno
-	                LEFT JOIN tls_study AS TS
-	                       ON MS.sdno = TS.sdno
-		                WHERE MS.cpno = " + ClassStudentCPNO + @"
-                    ";
+                             , CS.sdno
+			                 , CS.j_use_yn
+			                 , CS.j_count
+			                 , CS.j_hitpoint
+			                 , CS.j_quiz_cnt
+			                 , CS.correct_yn
+			                 , CS.c_use_yn
+			                 , CS.c_common_cnt
+			                 , CS.c_each_cnt
+			                 , CS.l_quiz_cnt
+			                 , CS.concept_yn
+			                 , CS.quiz_yn
+			                 , CS.menu_yn
+			                 , (SELECT usernm FROM tls_member WHERE userid = CS.rid) AS rid
+			                 , CS.RDATETIME
+			                 , (SELECT usernm FROM tls_member WHERE userid = CS.uid) AS uid
+			                 , CS.UDATETIME
+                             , CS.yyyy
+                             , CS.cpno
+                             , CS.clno
+		                  FROM tls_class_study AS CS
+                     LEFT JOIN tls_class AS TC
+	                        ON CS.cpno = TC.cpno and CS.clno = TC.clno
+	                 LEFT JOIN tls_study AS TS
+	                        ON CS.sdno = TS.sdno
+		                 WHERE CS.cpno = " + ClassEmployeeCPNO + @"
+                    ";                    
                     if (!string.IsNullOrEmpty(textBoxClassNM.Text))
                     {
                         pSqlCommand.CommandText += @"
                          AND TC.clnm LIKE '%" + textBoxClassNM.Text + "%' ";
                     }
-                    if (!string.IsNullOrEmpty(textBoxStudentNM.Text))
-                    {
-                        pSqlCommand.CommandText += @"
-                         AND tm.usernm LIKE '%" + textBoxStudentNM.Text + "%' ";
-                    }
                     if (!string.IsNullOrEmpty(textBoxStudyNM.Text))
                     {
                         pSqlCommand.CommandText += @"
                          AND sdnm LIKE '%" + textBoxStudyNM.Text + "%' ";
-                    }
+                    }                    
                     pSqlCommand.CommandText += @"                      
-                           AND REPLACE(CONVERT(VARCHAR(10), '" + dateTimePickerStudentStudy.Value + @"', 112), '-', '') BETWEEN MS.sdate AND MS.edate		            
-                        ORDER BY TC.clnm, usernm, MS.sdate
-		            ";
-                    textBoxClassNM.Text = "";
-                    textBoxStudentNM.Text = "";
+                           AND REPLACE(CONVERT(VARCHAR(10), '" + dateTimePickerClassStudy.Value + @"', 112), '-', '') BETWEEN CS.sdate AND CS.edate		            
+                        ORDER BY TC.clnm, CS.sdate
+                    ";
+                    textBoxClassNM.Text = "";                    
                     textBoxStudyNM.Text = "";
                     break;
 
-                case "select_student_schedule":
+               case "select_class_schedule":
 
                     //반 차시 리스트 
                     pSqlCommand.CommandText += @"
@@ -296,7 +303,7 @@ namespace Dreamonesys.CallCenter.Main
 							                       WHEN 'Q' THEN '문제풀이'
 							                       WHEN 'M' THEN '동영상'
 			                   END AS study_type_2			                         		
-		                  FROM tls_member_schedule AS A
+		                  FROM tls_class_schedule AS A
                     INNER JOIN tls_book AS B 
 	                        ON B.bkno = A.bkno
                     INNER JOIN tls_study AS D 
@@ -309,11 +316,11 @@ namespace Dreamonesys.CallCenter.Main
 		                    ON G.bkno = B.bkno AND G.chno = F.chno AND G.unno = E.unno
                     INNER JOIN tls_lvl_def AS H 
 		                    ON H.lvno = G.lvno AND H.dfno = G.dfno
-	                     WHERE A.yyyy = '" + GetCellValue(dataGridViewStudentStudy, dataGridViewStudentStudy.CurrentCell.RowIndex, "yyyy") + @"'
-	                       AND A.term_cd = '" + GetCellValue(dataGridViewStudentStudy, dataGridViewStudentStudy.CurrentCell.RowIndex, "term_cd") + @"'
-		                   AND A.cpno = '" + GetCellValue(dataGridViewStudentStudy, dataGridViewStudentStudy.CurrentCell.RowIndex, "cpno") + @"'
-		                   AND A.userid = '" + GetCellValue(dataGridViewStudentStudy, dataGridViewStudentStudy.CurrentCell.RowIndex, "userid") + @"'
-		                   AND A.sdno = '" + GetCellValue(dataGridViewStudentStudy, dataGridViewStudentStudy.CurrentCell.RowIndex, "sdno") + @"'
+	                     WHERE A.yyyy = '" + GetCellValue(dataGridViewClassStudy, dataGridViewClassStudy.CurrentCell.RowIndex, "yyyy") + @"'
+	                       AND A.term_cd = '" + GetCellValue(dataGridViewClassStudy, dataGridViewClassStudy.CurrentCell.RowIndex, "term_cd") + @"'
+		                   AND A.cpno = '" + GetCellValue(dataGridViewClassStudy, dataGridViewClassStudy.CurrentCell.RowIndex, "cpno") + @"'
+		                   AND A.clno = '" + GetCellValue(dataGridViewClassStudy, dataGridViewClassStudy.CurrentCell.RowIndex, "clno") + @"'
+		                   AND A.sdno = '" + GetCellValue(dataGridViewClassStudy, dataGridViewClassStudy.CurrentCell.RowIndex, "sdno") + @"'
 	                     ORDER BY cdate, G.sort
 
                             ";
@@ -350,7 +357,6 @@ namespace Dreamonesys.CallCenter.Main
 
             return CellValue;
         }
-
         #endregion Method
 
         #region Event
@@ -363,55 +369,53 @@ namespace Dreamonesys.CallCenter.Main
         /// <history>
         /// 박석제, 2014-09-24, 생성
         /// </history>
-        private void FormStudentSchedule_Load(object sender, EventArgs e)
+        private void FormClassSchedule_Load(object sender, EventArgs e)
         {
+            InitCombo();
             //반 차시 조회
-            SelectDataGridView(dataGridViewStudentStudy, "select_student_study");
-        }
-
-        private void dataGridViewStudentStudy_Click(object sender, EventArgs e)
-        {
-            //학생 차시 리스트 조회
-            SelectDataGridView(dataGridViewStudentSchedule, "select_student_schedule");
+            SelectDataGridView(dataGridViewClassStudy, "select_class_study");
         }
 
         private void textBoxClassNM_KeyDown(object sender, KeyEventArgs e)
-        {   //반별 차시 조회
+        {
             if (e.KeyCode == Keys.Enter)
             {
-                SelectDataGridView(dataGridViewStudentStudy, "select_student_study_all");
-            }            
-        }
-
-        private void textBoxStudentNM_KeyDown(object sender, KeyEventArgs e)
-        {   //학생별 차시 조회
-            if (e.KeyCode == Keys.Enter)
-            {
-                SelectDataGridView(dataGridViewStudentStudy, "select_student_study_all");
-            }            
+                SelectDataGridView(dataGridViewClassStudy, "select_class_study_all");
+            }
         }
 
         private void textBoxStudyNM_KeyDown(object sender, KeyEventArgs e)
-        {   //학습별 차시 조회
+        {
             if (e.KeyCode == Keys.Enter)
             {
-
-                SelectDataGridView(dataGridViewStudentStudy, "select_student_study_all");
-            }            
+                SelectDataGridView(dataGridViewClassStudy, "select_class_study_all");
+            }
         }
 
-        private void buttonStudentStudy_Click(object sender, EventArgs e)
-        {   //날짜별 차시 조회
-            SelectDataGridView(dataGridViewStudentStudy, "select_student_study_all");
+        private void buttonClassStudy_Click(object sender, EventArgs e)
+        {
+            SelectDataGridView(dataGridViewClassStudy, "select_class_study_all");
         }
 
+        private void dataGridViewClassStudy_Click(object sender, EventArgs e)
+        {
+            SelectDataGridView(dataGridViewClassSchedule, "select_class_schedule");
+        }
         
+
 
         #endregion Method
 
         
 
-        
+
+
+
+
+
+
+
+
 
 
 
